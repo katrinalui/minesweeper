@@ -94,16 +94,16 @@ export default class Board {
   }
 
   won(): boolean {
-    let hiddenMines = 0;
+    let won = true;
 
     this.grid.forEach(row => {
       row.forEach(square => {
-        if (!square.revealed && square.explosive) {
-          hiddenMines += 1;
+        if (!square.revealed && !square.explosive) {
+          won = false;
         }
       });
     });
 
-    return hiddenMines === this.numMines;
+    return won;
   }
 }

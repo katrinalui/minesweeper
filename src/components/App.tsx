@@ -20,17 +20,41 @@ interface AppState {
   width: number;
   height: number;
   numMines: number;
+  won: boolean;
+  lost: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
-    this.state = { width: 6, height: 6, numMines: 5 };
+    this.state = {
+      width: 6,
+      height: 6,
+      numMines: 5,
+      won: false,
+      lost: false
+    };
+    this.restartGame = this.restartGame.bind(this);
   }
 
   componentDidMount() {
+    this.restartGame();
+  }
+
+  componentWillReceiveProps(nextProps: AppProps) {
+    const { board } = nextProps;
+    if (board.won()) {
+      this.setState({ won: true });
+    }
+    if (board.lost()) {
+      this.setState({ lost: true });
+    }
+  }
+
+  restartGame() {
     const { width, height, numMines } = this.state;
     this.props.createGame(width, height, numMines);
+    this.setState({ won: false, lost: false });
   }
 
   renderBoard() {
@@ -54,11 +78,26 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
+    const { won, lost } = this.state;
+    let modal;
+    if (won || lost) {
+      const text = won ? 'You won! \u{1F389}' : 'Game over \u2620';
+      modal = (
+        <div className="modal modal__overlay">
+          <div className="modal modal__content">
+            <p>{text}</p>
+            <button onClick={this.restartGame}>Play Again</button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Minesweeper</h1>
         </header>
+        {modal}
         {this.renderBoard()}
       </div>
     );
