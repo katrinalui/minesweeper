@@ -3,6 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import './App.css';
 import Board from '../models/BoardModel';
 import Square from './Square';
+import Timer from './Timer';
 import { createGame, revealSquare, Action } from '../actions/game_actions';
 
 interface StateProps {
@@ -22,6 +23,7 @@ interface AppState {
   numMines: number;
   won: boolean;
   lost: boolean;
+  started: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -32,9 +34,11 @@ class App extends React.Component<AppProps, AppState> {
       height: 6,
       numMines: 5,
       won: false,
-      lost: false
+      lost: false,
+      started: false
     };
     this.restartGame = this.restartGame.bind(this);
+    this.onSquareClick = this.onSquareClick.bind(this);
   }
 
   componentDidMount() {
@@ -44,17 +48,24 @@ class App extends React.Component<AppProps, AppState> {
   componentWillReceiveProps(nextProps: AppProps) {
     const { board } = nextProps;
     if (board.won()) {
-      this.setState({ won: true });
+      this.setState({ won: true, started: false });
     }
     if (board.lost()) {
-      this.setState({ lost: true });
+      this.setState({ lost: true, started: false });
+    }
+  }
+
+  onSquareClick(pos: number[]) {
+    this.props.revealSquare(pos);
+    if (!this.state.started) {
+      this.setState({ started: true });
     }
   }
 
   restartGame() {
     const { width, height, numMines } = this.state;
     this.props.createGame(width, height, numMines);
-    this.setState({ won: false, lost: false });
+    this.setState({ won: false, lost: false, started: false });
   }
 
   renderBoard() {
@@ -68,7 +79,7 @@ class App extends React.Component<AppProps, AppState> {
                 key={`square=${j}`}
                 square={square}
                 adjacentMineCount={board.adjacentMineCount(square.pos)}
-                onClick={this.props.revealSquare}
+                onClick={this.onSquareClick}
               />
             ))}
           </div>
@@ -78,7 +89,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    const { won, lost } = this.state;
+    const { won, lost, started } = this.state;
     let modal;
     if (won || lost) {
       const text = won ? 'You won! \u{1F389}' : 'Game over \u2620';
@@ -98,6 +109,7 @@ class App extends React.Component<AppProps, AppState> {
           <h1 className="App-title">Minesweeper</h1>
         </header>
         {modal}
+        <Timer inProgress={started} reset={!won && !lost && !started} />
         {this.renderBoard()}
       </div>
     );
