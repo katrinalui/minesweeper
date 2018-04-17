@@ -39,6 +39,10 @@ class App extends React.Component<AppProps, AppState> {
     };
     this.restartGame = this.restartGame.bind(this);
     this.onSquareClick = this.onSquareClick.bind(this);
+    this.onWidthChange = this.onWidthChange.bind(this);
+    this.onHeightChange = this.onHeightChange.bind(this);
+    this.onMineChange = this.onMineChange.bind(this);
+    this.onResetClick = this.onResetClick.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +64,39 @@ class App extends React.Component<AppProps, AppState> {
     if (!this.state.started) {
       this.setState({ started: true });
     }
+  }
+
+  onWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = parseInt(e.target.value, 10);
+    let width = input < 2 ? 2 : input;
+    if (width > 50) {
+      width = 50;
+    }
+    this.setState({ width });
+  }
+
+  onHeightChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = parseInt(e.target.value, 10);
+    let height = input < 2 ? 2 : input;
+    if (height > 50) {
+      height = 50;
+    }
+    this.setState({ height });
+  }
+
+  onMineChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { width, height } = this.state;
+    const input = parseInt(e.target.value, 10);
+    const maxMines = width * height / 2;
+    let numMines = input > maxMines ? maxMines : input;
+    if (numMines < 1) {
+      numMines = 1;
+    }
+    this.setState({ numMines });
+  }
+
+  onResetClick() {
+    this.restartGame();
   }
 
   restartGame() {
@@ -89,7 +126,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    const { won, lost, started } = this.state;
+    const { won, lost, started, width, height, numMines } = this.state;
     let modal;
     if (won || lost) {
       const text = won ? 'You won! \u{1F389}' : 'Game over \u2620';
@@ -109,6 +146,36 @@ class App extends React.Component<AppProps, AppState> {
           <h1 className="App-title">Minesweeper</h1>
         </header>
         {modal}
+        <div className="options">
+          <label>
+            Width
+            <input
+              type="number"
+              value={width}
+              name="width"
+              onChange={this.onWidthChange}
+            />
+          </label>
+          <label>
+            Height
+            <input
+              type="number"
+              value={height}
+              name="height"
+              onChange={this.onHeightChange}
+            />
+          </label>
+          <label>
+            Mines
+            <input
+              type="number"
+              value={numMines}
+              name="numMines"
+              onChange={this.onMineChange}
+            />
+          </label>
+          <button onClick={this.onResetClick}>Reset</button>
+        </div>
         <Timer inProgress={started} reset={!won && !lost && !started} />
         {this.renderBoard()}
       </div>
