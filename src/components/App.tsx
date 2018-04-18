@@ -6,6 +6,8 @@ import Square from './Square';
 import Timer from './Timer';
 import { createGame, revealSquare, flagSquare, Action } from '../actions/game_actions';
 
+const MAX_SIZE = 50;
+
 interface StateProps {
   board: Board;
 }
@@ -74,8 +76,8 @@ class App extends React.Component<AppProps, AppState> {
   onWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = parseInt(e.target.value, 10);
     let width = input < 2 ? 2 : input;
-    if (width > 50) {
-      width = 50;
+    if (width > MAX_SIZE) {
+      width = MAX_SIZE;
     }
     this.setState({ width });
   }
@@ -83,8 +85,8 @@ class App extends React.Component<AppProps, AppState> {
   onHeightChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = parseInt(e.target.value, 10);
     let height = input < 2 ? 2 : input;
-    if (height > 50) {
-      height = 50;
+    if (height > MAX_SIZE) {
+      height = MAX_SIZE;
     }
     this.setState({ height });
   }
@@ -92,7 +94,7 @@ class App extends React.Component<AppProps, AppState> {
   onMineChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { width, height } = this.state;
     const input = parseInt(e.target.value, 10);
-    const maxMines = width * height / 2;
+    const maxMines = Math.ceil(width * height / 2);
     let numMines = input > maxMines ? maxMines : input;
     if (numMines < 1) {
       numMines = 1;
@@ -106,9 +108,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   restartGame() {
-    const { width, height, numMines } = this.state;
+    let { width, height, numMines } = this.state;
+    const maxMines = Math.ceil(width * height / 2);
+    numMines = numMines > maxMines ? maxMines : numMines;
     this.props.createGame(width, height, numMines);
-    this.setState({ won: false, lost: false, started: false });
+    this.setState({ numMines, won: false, lost: false, started: false });
   }
 
   renderBoard() {
