@@ -5,7 +5,7 @@ import SquareModel from '../models/SquareModel';
 interface SquareProps {
   square: SquareModel;
   adjacentMineCount: number;
-  onClick: (pos: number[]) => void;
+  onClick: (pos: number[], flagged: boolean) => void;
 }
 
 class Square extends React.Component<SquareProps> {
@@ -14,8 +14,9 @@ class Square extends React.Component<SquareProps> {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClick() {
-    this.props.onClick(this.props.square.pos);
+  onClick(e: React.MouseEvent<HTMLButtonElement>) {
+    const flagged = e.altKey ? true : false;
+    this.props.onClick(this.props.square.pos, flagged);
   }
 
   render() {
@@ -28,6 +29,9 @@ class Square extends React.Component<SquareProps> {
     } else if (square.revealed) {
       className += ' square--revealed';
       text = adjacentMineCount;
+    } else if (square.flagged) {
+      className += ' square--flagged';
+      text = '\u{1F6A9}';
     }
 
     return (

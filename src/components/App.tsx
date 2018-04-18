@@ -4,7 +4,7 @@ import './App.css';
 import Board from '../models/BoardModel';
 import Square from './Square';
 import Timer from './Timer';
-import { createGame, revealSquare, Action } from '../actions/game_actions';
+import { createGame, revealSquare, flagSquare, Action } from '../actions/game_actions';
 
 interface StateProps {
   board: Board;
@@ -13,6 +13,7 @@ interface StateProps {
 interface DispatchProps {
   createGame: (width: number, height: number, numMines: number) => void;
   revealSquare: (pos: number[]) => void;
+  flagSquare: (pos: number[]) => void;
 }
 
 type AppProps = StateProps & DispatchProps;
@@ -59,8 +60,12 @@ class App extends React.Component<AppProps, AppState> {
     }
   }
 
-  onSquareClick(pos: number[]) {
-    this.props.revealSquare(pos);
+  onSquareClick(pos: number[], flagged: boolean) {
+    if (flagged) {
+      this.props.flagSquare(pos);
+    } else {
+      this.props.revealSquare(pos);
+    }
     if (!this.state.started) {
       this.setState({ started: true });
     }
@@ -188,6 +193,10 @@ class App extends React.Component<AppProps, AppState> {
           />
         </form>
         <Timer inProgress={started} reset={!won && !lost && !started} />
+        <div className="instructions">
+          <div>click: reveal</div>
+          <div>alt + click: toggle flag</div>
+        </div>
         {this.renderBoard()}
       </div>
     );
@@ -205,7 +214,8 @@ function mapDispatchToProps(dispatch: Dispatch<Action>): DispatchProps {
     createGame: (width: number, height: number, numMines: number) => (
       dispatch(createGame(width, height, numMines))
     ),
-    revealSquare: (pos: number[]) => dispatch(revealSquare(pos))
+    revealSquare: (pos: number[]) => dispatch(revealSquare(pos)),
+    flagSquare: (pos: number[]) => dispatch(flagSquare(pos))
   };
 }
 

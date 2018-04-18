@@ -1,5 +1,5 @@
 import Board from '../models/BoardModel';
-import { CREATE_GAME, REVEAL_SQUARE, Action } from '../actions/game_actions';
+import { CREATE_GAME, REVEAL_SQUARE, FLAG_SQUARE, Action } from '../actions/game_actions';
 
 const defaultState = new Board(6, 6, 5);
 
@@ -12,6 +12,11 @@ function rootReducer(state: Board = defaultState, action: Action) {
     case REVEAL_SQUARE: {
       const newState = Object.assign(Object.create(Object.getPrototypeOf(state)), state);
       newState.explore(action.pos);
+      return newState;
+    }
+    case FLAG_SQUARE: {
+      const newState = Object.assign(Object.create(Object.getPrototypeOf(state)), state);
+      newState.flag(action.pos);
       return newState;
     }
     default:

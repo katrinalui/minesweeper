@@ -7,8 +7,10 @@ const DELTAS = Object.freeze([
 
 export default class Board {
   grid: Square[][] = [];
+  flaggedCount: number = 0;
 
   constructor(public width: number, public height: number, public numMines: number) {
+    this.numMines = numMines < width * height / 2 ? numMines : width * height / 2;
     this.generateBoard();
     this.plantMines();
   }
@@ -61,6 +63,17 @@ export default class Board {
     }
   }
 
+  flag(pos: number[]): void {
+    const square = this.grid[pos[0]][pos[1]];
+    if (!square.flagged && this.flaggedCount < this.numMines) {
+      square.flagged = true;
+      this.flaggedCount += 1;
+    } else if (square.flagged) {
+      square.flagged = false;
+      this.flaggedCount -= 1;
+    }
+  }
+
   getNeighbors(pos: number[]): Square[] {
     const neighbors: Square[] = [];
     DELTAS.forEach(delta => {
@@ -95,15 +108,19 @@ export default class Board {
 
   won(): boolean {
     let won = true;
+    let flaggedMineCount = 0;
 
     this.grid.forEach(row => {
       row.forEach(square => {
-        if (!square.revealed && !square.explosive) {
+        if (square.flagged && square.explosive) {
+          flaggedMineCount += 1;
+        }
+        if (!square.explosive && !square.revealed) {
           won = false;
         }
       });
     });
 
-    return won;
+    return flaggedMineCount === this.numMines || won;
   }
 }
