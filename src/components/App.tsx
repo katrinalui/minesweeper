@@ -42,7 +42,7 @@ class App extends React.Component<AppProps, AppState> {
     this.onWidthChange = this.onWidthChange.bind(this);
     this.onHeightChange = this.onHeightChange.bind(this);
     this.onMineChange = this.onMineChange.bind(this);
-    this.onResetClick = this.onResetClick.bind(this);
+    this.onResetSubmit = this.onResetSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -95,7 +95,8 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ numMines });
   }
 
-  onResetClick() {
+  onResetSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     this.restartGame();
   }
 
@@ -133,8 +134,8 @@ class App extends React.Component<AppProps, AppState> {
       modal = (
         <div className="modal modal__overlay">
           <div className="modal modal__content">
-            <p>{text}</p>
-            <button onClick={this.restartGame}>Play Again</button>
+            <p className="modal modal_text">{text}</p>
+            <button className="button button__modal" onClick={this.restartGame}>Play Again</button>
           </div>
         </div>
       );
@@ -142,40 +143,50 @@ class App extends React.Component<AppProps, AppState> {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Minesweeper</h1>
+        <header className="header">
+          <h1 className="title">Minesweeper</h1>
         </header>
         {modal}
-        <div className="options">
-          <label>
+        <form className="options" onSubmit={this.onResetSubmit}>
+          <label className="label">
             Width
             <input
               type="number"
               value={width}
               name="width"
+              className="input"
+              autoComplete="off"
               onChange={this.onWidthChange}
             />
           </label>
-          <label>
+          <label className="label">
             Height
             <input
               type="number"
               value={height}
               name="height"
+              className="input"
+              autoComplete="off"
               onChange={this.onHeightChange}
             />
           </label>
-          <label>
+          <label className="label">
             Mines
             <input
               type="number"
               value={numMines}
               name="numMines"
+              className="input"
+              autoComplete="off"
               onChange={this.onMineChange}
             />
           </label>
-          <button onClick={this.onResetClick}>Reset</button>
-        </div>
+          <input
+            type="submit"
+            className="button button__reset"
+            value="Reset"
+          />
+        </form>
         <Timer inProgress={started} reset={!won && !lost && !started} />
         {this.renderBoard()}
       </div>

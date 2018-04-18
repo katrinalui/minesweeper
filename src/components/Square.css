@@ -1,0 +1,17 @@
+.square {
+  width: 22px;
+  height: 22px;
+  padding: 0px;
+  border-style: outset;
+  border-width: 2px;
+  line-height: 20px;
+  background-color: #CECECE;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.square--revealed {
+  border-style: inset;
+}

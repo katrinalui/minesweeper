@@ -1,4 +1,5 @@
 import * as React from 'react';
+import './Square.css';
 import SquareModel from '../models/SquareModel';
 
 interface SquareProps {

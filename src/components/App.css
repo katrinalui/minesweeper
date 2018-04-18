@@ -1,28 +1,124 @@
 .App {
   text-align: center;
+  color: white;
+  min-height: 100vh;
+  background: #2980b9;
+  background: -webkit-linear-gradient(to top, #2c3e50, #2980b9);
+  background: linear-gradient(to top, #2c3e50, #2980b9);
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
+.header {
+  height: 100px;
   padding: 20px;
   color: white;
 }
 
-.App-title {
-  font-size: 1.5em;
+.title {
+  font-size: 2.5em;
+  text-transform: uppercase;
+  text-shadow: 2px 3px 0px #898999;
 }
 
-.App-intro {
-  font-size: large;
+.button {
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  padding: 12px 18px;
+  letter-spacing: 0.095em;
+  border-radius: 20px;
+  background-color: #2980b9;
+  border: none;
+  color: white;
+  -webkit-appearance: none;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.button:hover {
+  background-color: #2473a6;
+}
+
+.button__reset {
+  height: 35px;
+  width: 80px;
+  box-shadow: 5px 5px 14px 1px rgba(0,0,0,0.1);
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button__modal {
+  width: 110px;
+}
+
+.modal__overlay {
+  z-index: 99;
+  position: absolute;
+  top: 0%;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  background: rgba(0, 0, 0, .3);
+}
+
+.modal__content {
+  z-index: 99;
+  position: absolute;
+  background: #206694;
+  border: 1px solid #1c5981;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  color: white;
+  width: 250px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%) translateY(-50%);
+  box-shadow: 5px 5px 14px 1px rgba(0,0,0,0.1);
+}
+
+.modal_text {
+  margin-top: 35px;
+}
+
+.options {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 50px 0px;
+  padding-left: 90px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  margin-right: 15px;
+  font-size: 0.9em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.input {
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0px;
+  height: 28px;
+  width: 55px;
+  padding-left: 10px;
+  text-align: center;
+  font-size: 1em;
+  background-color: transparent;
+  color: #CECECE;
+}
+
+.board__row {
+  display: flex;
+  justify-content: center;
+}
+
+.board__row:after {
+  content: "";
+  clear: both;
+  display: block;
 }
