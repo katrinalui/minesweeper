@@ -12,7 +12,11 @@
   outline: none;
 }
 
-.square--revealed {
+.square--revealed, .square--exploded {
   border-style: inset;
   cursor: default;
+}
+
+.square--exploded, .square--flagged {
+  padding-left: 3px;
 }
